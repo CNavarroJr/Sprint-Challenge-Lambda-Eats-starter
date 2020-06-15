@@ -15,7 +15,7 @@ const App = () => {
 
       <Route exact path='/'>
         <Card>
-          <CardImg src='./Assets/Pizza.jpg'/>
+          <CardImg src={require('./assets/Pizza.jpg')}/>
           <Link to={'/pizza'}>
             <Button color='info' style={{ position: 'absolute', left: '50%', top: '50%'}}>Pizza!</Button>
           </Link>

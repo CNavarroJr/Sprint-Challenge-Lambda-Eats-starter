@@ -1,8 +1,11 @@
 import React, { useState } from 'react'; 
-import { Card, CardImg, Form, FormGroup, Input, Dropdown, DropdownToggle,DropdownMenu, Label, Button } from 'reactstrap';
+import { Card, CardImg, Form, FormGroup, Input, Dropdown, DropdownToggle,DropdownMenu, Label, Button, } from 'reactstrap';
+import axios from 'axios';
+import * as yup from 'yup';
 
 const OrderForm = () => {
 
+  // All useState's
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [formData, setFormData] = useState({
     name:"",
@@ -26,20 +29,47 @@ const OrderForm = () => {
 
   const toggle = () => setDropdownOpen((prevState) => !prevState)
 
+  // this is the schema for yup
+
+  const schema = yup.object().shape({
+    name: yup.string().required().min(2),
+    size: yup.string().required(),
+    sauce: yup.string().required(),
+    special: yup.string(),
+    pepperoni: yup.boolean(),
+    sausage: yup.boolean(),
+    canadianbacon: yup.boolean(),
+    spicyitaliansausage: yup.boolean(),
+    extracheese: yup.boolean()
+  })
+
+  // here is the submit function with axios
+
+  const submit = () => {
+    schema.validate(formData).then(() => {
+      axios.post('https://reqres.in/api/users', formData).then((res) => {
+        console.log(res.data, 'This is your posted data')
+      })
+    })
+  }
+
   return (
     <>
       <Card color='info' style={{ width: '50%', margin: '0 auto'}}>
         <h2 style={{ color: 'white', margin: '0 auto' }}>Build Your Own Pizza!</h2>
-        <CardImg src="/assets/pizza.jpg" alt="Pizza Image"/>
+        <CardImg src={require('./assets/Pizza.jpg')}/>
       </Card>
 
-      <Form onSubmit={(e) => {
+      {/* onSubmit function */}
+
+      <Form data-cy='submit' onSubmit={(e) => {
         e.preventDefault()
-        console.log(formData)
+        submit()
       }} style={{ margin: '5% auto', width: '50%', }}>
+
         <FormGroup>
           <legend>Name</legend>
-          <Input type='name' name='name' value={formData.name} onChange={handleChange}/>
+          <Input type='name' name='name' data-cy='name' value={formData.name} onChange={handleChange}/>
         </FormGroup>
 
         <FormGroup>
@@ -107,35 +137,35 @@ const OrderForm = () => {
         <legend>Toppings!</legend>
         <FormGroup check>
           <Label check>
-            <Input type='checkbox' name='pepperoni' checked={formData.pepperoni} onChange={handleToppings}/>
+            <Input type='checkbox' name='pepperoni' data-cy='checkbox1' checked={formData.pepperoni} onChange={handleToppings}/>
             Pepperoni
           </Label>
         </FormGroup>
 
         <FormGroup check>
           <Label check>
-            <Input type='checkbox' name='sausage' checked={formData.sausage} onChange={handleToppings}/>
+            <Input type='checkbox' name='sausage' data-cy='checkbox2' checked={formData.sausage} onChange={handleToppings}/>
             Sausage
           </Label>
         </FormGroup>
 
         <FormGroup check>
           <Label check>
-            <Input type='checkbox' name='canadianbacon' checked={formData.canadianbacon} onChange={handleToppings}/>
+            <Input type='checkbox' name='canadianbacon' data-cy='checkbox3' checked={formData.canadianbacon} onChange={handleToppings}/>
             Canadian Bacon 
           </Label>
         </FormGroup>
 
         <FormGroup check>
           <Label check>
-            <Input type='checkbox' name='spicyitaliansausage' checked={formData.spicyitaliansausage} onChange={handleToppings}/>
+            <Input type='checkbox' name='spicyitaliansausage' data-cy='checkbox4' checked={formData.spicyitaliansausage} onChange={handleToppings}/>
             Spicy Italian Sausage 
           </Label>
         </FormGroup>
 
         <FormGroup check>
           <Label check>
-            <Input type='checkbox' name='extracheese' checked={formData.extracheese} onChange={handleToppings}/>
+            <Input type='checkbox' name='extracheese' data-cy='checkbox5' checked={formData.extracheese} onChange={handleToppings}/>
             Extra Cheese
           </Label>
         </FormGroup>
